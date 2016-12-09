@@ -1,0 +1,22 @@
+{
+  "name": "node-edflib",
+  "version": "1.0.0",
+  "description": "EDFLib wrapper for nodejs",
+  "main": "node-edflib-test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://gitlab.utasco.com/UCS/node-edflib.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "gypfile": true,
+  "dependencies": {
+    "nan": "^2.4.0",
+    "nan-check": "0.0.6",
+    "nan-marshal": "0.0.5"
+  }
+}
