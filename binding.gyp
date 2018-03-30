@@ -15,6 +15,8 @@
         , "_USE_MATH_DEFINES"
 	]
     , "cflags": ["-std=c++11"]
+    , 'cflags!': [ '-fno-exceptions' ]
+    , 'cflags_cc!': [ '-fno-exceptions' ]
     , "files" : ["src/edf_wrapper.h"]	
     , 'conditions': [
       ['OS=="win"', {
@@ -37,6 +39,10 @@
           }, # Release
         }, # configurations
       } ], # OS=="win"
+      #['OS=="linux", {
+        
+      #} ], # OS=="linux"
+
     ], # conditions
     }
   ]

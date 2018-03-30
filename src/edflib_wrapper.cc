@@ -559,7 +559,7 @@ NAN_SETTER(EdfModule::prp_SetHeader)
 #define EDF_HEADER_GET_INT_PROP_IMPL(Name, NodeType, CType) \
 	NAN_GETTER(EdfModule::prp_header_get_##Name) { \
 		EdfModule *self = node::ObjectWrap::Unwrap<EdfModule>(info.This()); \
-		Local<NodeType> result = Nan::New(static_cast<CType>(self->edfInfo().##Name)); \
+		Local<NodeType> result = Nan::New(static_cast<CType>(self->edfInfo().Name)); \
 		info.GetReturnValue().Set(result); }
 #define EDF_HEADER_SET_INT_PROP_IMPL(Name, NodeType, CType, EdfLibSetter) \
 	NAN_SETTER(EdfModule::prp_header_set_##Name) {\
@@ -567,14 +567,14 @@ NAN_SETTER(EdfModule::prp_SetHeader)
 		if (self->isReadMode()) ThrowError(READ_ONLY_TXT); else {\
 			int res = EdfLibSetter(self->edfInfo().handle, To<CType>(value).FromMaybe(0));\
 			if (res){ std::stringstream ss; ss << EDF_LIB_ERROR << " " << res; ThrowError(ss.str().c_str()); } \
-			else self->edfInfo().##Name = To<CType>(value).FromMaybe(0); } \
+			else self->edfInfo().Name = To<CType>(value).FromMaybe(0); } \
 		info.GetReturnValue().Set(info.This()); }
 
 #define EDF_HEADER_SET_STARTDATE_INT_PROP_IMPL(Name, CType) \
 	NAN_SETTER(EdfModule::prp_header_set_##Name) {\
 		EdfModule *self = node::ObjectWrap::Unwrap<EdfModule>(info.This()); \
 		if (self->isReadMode()) ThrowError(READ_ONLY_TXT); else { \
-			self->m_startdaySetters |= StartdayFields::ST_##Name; self->edfInfo().##Name = To<CType>(value).FromMaybe(0); \
+			self->m_startdaySetters |= StartdayFields::ST_##Name; self->edfInfo().Name = To<CType>(value).FromMaybe(0); \
 			if ((self->m_startdaySetters & StartdayFields::ST_MASK) == StartdayFields::ST_MASK) {\
 				int res = edf_set_startdatetime(self->edfInfo().handle, self->edfInfo().startdate_year, self->edfInfo().startdate_month, self->edfInfo().startdate_day \
 						, self->edfInfo().starttime_hour, self->edfInfo().starttime_minute, self->edfInfo().starttime_second);\
@@ -587,7 +587,7 @@ NAN_SETTER(EdfModule::prp_SetHeader)
 #define EDF_HEADER_GET_STRING_PROP_IMPL(Name, NodeType) \
 	NAN_GETTER(EdfModule::prp_header_get_##Name) { \
 		EdfModule *self = node::ObjectWrap::Unwrap<EdfModule>(info.This()); \
-		MaybeLocal<NodeType> result = Nan::New(self->edfInfo().##Name); \
+		MaybeLocal<NodeType> result = Nan::New(self->edfInfo().Name); \
 		info.GetReturnValue().Set(result.ToLocalChecked()); }
 
 #define EDF_HEADER_SET_STRING_PROP_IMPL(Name, NodeType, EdfLibSetter) \
@@ -596,8 +596,8 @@ NAN_SETTER(EdfModule::prp_SetHeader)
 		if (self->isReadMode()) ThrowError(READ_ONLY_TXT); else { \
 			int res = EdfLibSetter(self->edfInfo().handle, *Utf8String(value)); \
 			if (res) { std::stringstream ss; ss << EDF_LIB_ERROR << " " << res; ThrowError(ss.str().c_str()); } \
-			else std::strncpy(self->edfInfo().##Name, *Utf8String(value), sizeof(self->edfInfo().##Name)); }\
-		self->edfInfo().##Name[sizeof(self->edfInfo().##Name) - 1] = '\0'; \
+			else std::strncpy(self->edfInfo().Name, *Utf8String(value), sizeof(self->edfInfo().Name)); }\
+		self->edfInfo().Name[sizeof(self->edfInfo().Name) - 1] = '\0'; \
 		info.GetReturnValue().Set(info.This()); }
 
 #define EDFLIB_IMPL_DEFINE_GETTER(Name) \

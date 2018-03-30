@@ -1,4 +1,4 @@
-var addon = require('./build/Release/edflib');
+var addon = require('../build/Release/edflib');
 console.log('EDFLib version ' + addon.GetVersion('wr') );
 
 var inst = new addon.Edf();

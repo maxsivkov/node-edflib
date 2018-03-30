@@ -84,7 +84,7 @@ std::basic_string<C, T, A> trim(const std::basic_string<C, T, A>& str,
 
 std::string trim_str(const char*s);
 
-class EdfModule : node::ObjectWrap {
+class EdfModule : public node::ObjectWrap {
 private:
 	static Persistent<Function> constructor;
 	static Persistent<Function> m_loggerCb;
@@ -399,18 +399,18 @@ class WriteSamplesWorker : Nan::AsyncWorker {
 		edf_function_t m_function;
 		edf_buf_writer(EdfModule &module, edf_function_t edf_function) : parent_t(module), m_function(edf_function) {}
 		void edf_write_buf() {
-			m_edfResult = m_function(m_module.edfInfo().handle, m_block.data());
-			if (!m_edfResult) m_module.n_currentWriteSignalNo++;
+			this->m_edfResult = m_function(m_module.edfInfo().handle, this->m_block.data());
+			if (!this->m_edfResult) m_module.n_currentWriteSignalNo++;
 		}
 		void edf_write_block() {
 			std::stringstream ss;
-			ss << "writing " << m_block.size() / m_block_len << " blocks data size " << m_block.size() << " m_block_len " << m_block_len;
+			ss << "writing " << this->m_block.size() / this->m_block_len << " blocks data size " << this->m_block.size() << " m_block_len " << this->m_block_len;
 			//m_result = ss.str();
 
-			for (uint32_t block_no = 0; block_no < m_block.size() / m_block_len; block_no++)
+			for (uint32_t block_no = 0; block_no < this->m_block.size() / this->m_block_len; block_no++)
 			{
-				m_edfResult = m_function(m_module.edfInfo().handle, m_block.data() + block_no * m_block_len);
-				if (m_edfResult < 0) break;
+				this->m_edfResult = m_function(m_module.edfInfo().handle, this->m_block.data() + block_no * this->m_block_len);
+				if (this->m_edfResult < 0) break;
 			}
 		}
 	};

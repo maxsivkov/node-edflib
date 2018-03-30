@@ -1,5 +1,5 @@
 
-var edflib = require('./build/Release/edflib');
+var edflib = require('../build/Release/edflib');
 console.log('EDFLib version ' + edflib.GetVersion('wr') );
 edflib.SetLogger(function(s) { console.log(s); } )
 var inst = new edflib.Edf();

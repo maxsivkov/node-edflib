@@ -47,10 +47,6 @@ NAN_METHOD(EdfOpenReadWorker::OpenRead) {
 	if (Nan::Check(info).ArgumentsCount(3)
 		.Argument(0).NotNull().Bind(path)
 		.Argument(1).NotNull().Bind(readAnnotations)
-		//.Argument(1).StringEnum<ReadAnnotations>({
-		//	{ "DoNotRead",     ReadAnnotations::DoNotRead },
-		//	{ "Read",   ReadAnnotations::Read },
-		//	{ "ReadAll",  ReadAnnotations::ReadAll } }).Bind(readAnnotations)
 		.Argument(2).IsFunction().Bind(_callback).Error(&error)
 
 		&& Utf8String(path).length() > 0
@@ -75,8 +71,6 @@ EdfOpenWriteWorker::EdfOpenWriteWorker(Callback *callback, EdfModule &m) : Async
 EdfOpenWriteWorker::~EdfOpenWriteWorker() {};
 
 void EdfOpenWriteWorker::Execute() {
-	//clock_t sleep = CLOCKS_PER_SEC * 5 + clock();
-	//while (sleep > clock());
 	int err = edfopen_file_writeonly(m_path.c_str(), m_fileType, m_signalsNo);
 	if (err < 0)
 	{
