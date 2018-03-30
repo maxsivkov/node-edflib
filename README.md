@@ -4,7 +4,7 @@ Edflib bindings for NodeJS
 ## Building
 Just run
 ```
-node install
+npm install
 ```
 in the project's folder
 
