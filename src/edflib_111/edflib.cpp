@@ -853,6 +853,7 @@ int edfrewind(int handle, int edfsignal)
   channel = hdrlist[handle]->mapped_signals[edfsignal];
 
   hdrlist[handle]->edfparam[channel].sample_pntr = 0LL;
+  return (0);
 }
 
 

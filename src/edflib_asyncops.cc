@@ -47,6 +47,10 @@ NAN_METHOD(EdfOpenReadWorker::OpenRead) {
 	if (Nan::Check(info).ArgumentsCount(3)
 		.Argument(0).NotNull().Bind(path)
 		.Argument(1).NotNull().Bind(readAnnotations)
+		//.Argument(1).StringEnum<ReadAnnotations>({
+		//	{ "DoNotRead",     ReadAnnotations::DoNotRead },
+		//	{ "Read",   ReadAnnotations::Read },
+		//	{ "ReadAll",  ReadAnnotations::ReadAll } }).Bind(readAnnotations)
 		.Argument(2).IsFunction().Bind(_callback).Error(&error)
 
 		&& Utf8String(path).length() > 0
@@ -71,6 +75,8 @@ EdfOpenWriteWorker::EdfOpenWriteWorker(Callback *callback, EdfModule &m) : Async
 EdfOpenWriteWorker::~EdfOpenWriteWorker() {};
 
 void EdfOpenWriteWorker::Execute() {
+	//clock_t sleep = CLOCKS_PER_SEC * 5 + clock();
+	//while (sleep > clock());
 	int err = edfopen_file_writeonly(m_path.c_str(), m_fileType, m_signalsNo);
 	if (err < 0)
 	{
@@ -329,7 +335,7 @@ void EdfReadAnnotationsWorker::Execute() {
 	if (n > 0)
 	{
 		m_items.resize(n);
-		for (int i = 0; i < m_items.size(); i++)
+		for (size_t i = 0; i < m_items.size(); i++)
 		{
 			std::memset(&m_items.at(i), 0, sizeof(m_items.at(i)));
 			int err = edf_get_annotation(m_module.edfInfo().handle, i, &m_items.at(i));
@@ -347,7 +353,7 @@ void EdfReadAnnotationsWorker::Execute() {
 
 void EdfReadAnnotationsWorker::HandleOKCallback() {
 	Local<v8::Array> results = New<v8::Array>(m_items.size());
-	for (int i = 0; i < m_items.size(); i++)
+	for (size_t i = 0; i < m_items.size(); i++)
 	{
 		Local<v8::Object> itm = Nan::New<v8::Object>();
 		itm->Set(Nan::New("onset").ToLocalChecked(), Nan::New(static_cast<double>(m_items.at(i).onset)));
@@ -420,7 +426,6 @@ void WriteSamplesWorker::Execute() {
 		m_error = FILE_NOT_OPENED_TXT;
 		return;
 	}
-	int err = 0;
 	if (m_writeHandler.get()) 
 	{
 		m_writeHandler->write();

@@ -207,7 +207,7 @@ NAN_METHOD(EdfModule::EdfSeek) {
 	Local<v8::Integer> signal = Nan::New<v8::Integer>(-1);
 	Local<v8::Number> offset = Nan::New<v8::Integer>(0);
 	Local<v8::Integer> whence = Nan::New<v8::Integer>(-1);
-	long long result(0);
+	int64_t result(0);
 	std::string error = FILE_NOT_OPENED_TXT;
 	if (self->m_fileOpened)
 	{
@@ -219,7 +219,7 @@ NAN_METHOD(EdfModule::EdfSeek) {
 			&& To<int>(signal).FromMaybe(-1) >= 0 && To<int>(whence).FromMaybe(-1) >= 0
 			)
 		{
-			result = edfseek(self->edfInfo().handle, To<int>(signal).FromJust(), To<long long>(offset).FromJust(), To<int>(whence).FromJust());
+			result = edfseek(self->edfInfo().handle, To<int>(signal).FromJust(), To<int64_t>(offset).FromJust(), To<int>(whence).FromJust());
 			if (result < 0) {
 				std::stringstream ss;
 				ss << EDF_LIB_ERROR << " " << result;
@@ -236,7 +236,7 @@ NAN_METHOD(EdfModule::EdfTell) {
 	EdfModule *self = node::ObjectWrap::Unwrap<EdfModule>(info.This());
 	Local<v8::Integer> signal = Nan::New<v8::Integer>(-1);
 	std::string error = FILE_NOT_OPENED_TXT;
-	long long result = 0;
+	int64_t result = 0;
 	if (self->m_fileOpened)
 	{
 		error = WRONG_ARGUMENTS_TXT;
@@ -322,7 +322,7 @@ NAN_METHOD(EdfModule::SetSampleFrequency) {
 	info.GetReturnValue().Set(Nan::New<v8::Boolean>(result));
 }
 
-Nan::NAN_METHOD_RETURN_TYPE EdfModule::WriteAnnotation(Nan::NAN_METHOD_ARGS_TYPE info, std::function<int(int, long long, long long, const char *)>edf_write_annotation) {
+Nan::NAN_METHOD_RETURN_TYPE EdfModule::WriteAnnotation(Nan::NAN_METHOD_ARGS_TYPE info, std::function<int(int, int64_t, int64_t, const char *)>edf_write_annotation) {
 
 	bool result = false;
 	EdfModule *self = node::ObjectWrap::Unwrap<EdfModule>(info.This());
@@ -336,10 +336,10 @@ Nan::NAN_METHOD_RETURN_TYPE EdfModule::WriteAnnotation(Nan::NAN_METHOD_ARGS_TYPE
 			.Argument(0).NotNull().Bind(onset)
 			.Argument(1).NotNull().Bind(duration)
 			.Argument(2).NotNull().Bind(description)
-			&& To<long long>(onset).FromMaybe(-1) >= 0 && To<long long>(duration).FromMaybe(-1) >= 0
+			&& To<int64_t>(onset).FromMaybe(-1) >= 0 && To<int64_t>(duration).FromMaybe(-1) >= 0
 			)
 		{
-			int err = edf_write_annotation(self->edfInfo().handle, To<long long>(onset).FromJust(), To<long long>(duration).FromJust(), *Utf8String(description));
+			int err = edf_write_annotation(self->edfInfo().handle, To<int64_t>(onset).FromJust(), To<int64_t>(duration).FromJust(), *Utf8String(description));
 			if (err < 0) {
 				std::stringstream ss;
 				ss << EDF_LIB_ERROR << " " << err << " [" << edferror_text(err) << "]";
@@ -412,7 +412,7 @@ Nan::NAN_METHOD_RETURN_TYPE EdfModule::SetSignalStringProp(Nan::NAN_METHOD_ARGS_
 		if (Nan::Check(info).ArgumentsCount(2)
 			.Argument(0).NotNull().Bind(signal)
 			.Argument(1).NotNull().Bind(parameter)
-			&& To<long long>(signal).FromMaybe(-1) >= 0
+			&& To<int64_t>(signal).FromMaybe(-1) >= 0
 			)
 		{
 			int err = edf_set_func(self->edfInfo().handle, To<int>(signal).FromJust(), *Utf8String(parameter));
@@ -726,7 +726,7 @@ NAN_GETTER(EdfModule::signalparam_getter)
 		return;
 	}
 	Local<v8::Array> results = Nan::New<v8::Array>(obj->edfInfo().edfsignals);
-	for (size_t i = 0; i < obj->edfInfo().edfsignals; i++)
+	for (int i = 0; i < obj->edfInfo().edfsignals; i++)
 	{
 		edf_param_struct &p = obj->edfInfo().signalparam[i];
 		Local<v8::Object> itm = Nan::New<v8::Object>();
@@ -756,7 +756,7 @@ NAN_GETTER(EdfModule::annotations_getter)
 	}
 	Local<v8::Array> results = Nan::New<v8::Array>(obj->edfInfo().annotations_in_file);
 	edf_annotation_struct annot;
-	for (size_t i = 0; i < obj->edfInfo().annotations_in_file; i++)
+	for (int i = 0; i < obj->edfInfo().annotations_in_file; i++)
 	{
 		std::memset(&annot, 0, sizeof(annot));
 		int err = edf_get_annotation(obj->edfInfo().handle, i, &annot);

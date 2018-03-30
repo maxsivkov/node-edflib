@@ -144,7 +144,7 @@ public:
 	static NAN_METHOD(SetSampleFrequency);
 	static NAN_METHOD(SetPhysicalParameters);
 	static NAN_METHOD(SetDigitalParameters);
-	static Nan::NAN_METHOD_RETURN_TYPE WriteAnnotation(Nan::NAN_METHOD_ARGS_TYPE, std::function<int(int, long long, long long, const char *)>);
+	static Nan::NAN_METHOD_RETURN_TYPE WriteAnnotation(Nan::NAN_METHOD_ARGS_TYPE, std::function<int(int, int64_t, int64_t, const char *)>);
 	
 	static NAN_METHOD(WriteAnnotationUtf8);
 	static NAN_METHOD(WriteAnnotationLatin1);
@@ -234,9 +234,9 @@ class EdfCloseFileWorker : Nan::AsyncWorker {
 public:
 	EdfCloseFileWorker(Nan::Callback *, EdfModule &);
 	~EdfCloseFileWorker();
+	EdfModule &m_module;
 	std::string m_error;
 	void Execute();
-	EdfModule &m_module;
 	static NAN_METHOD(CloseFile);
 
 protected:
@@ -337,7 +337,7 @@ class WriteSamplesWorker : Nan::AsyncWorker {
 		samples_t(EdfModule &module) : edf_write_handler_t(module), m_block_len(0){}
 		void init_block_from_buf(Local<v8::Array> &signals_data) {
 			for (uint32_t i = 0; i < signals_data->Length(); i++)
-				item_push_back(To<CastT>(signals_data->Get(i)).FromJust());
+				this->item_push_back(To<CastT>(signals_data->Get(i)).FromJust());
 		}
 		void init_block_from_array(const Local<v8::Array> &signals_data)
 		{
@@ -347,7 +347,7 @@ class WriteSamplesWorker : Nan::AsyncWorker {
 			uint32_t min_blocks = std::numeric_limits<uint32_t>::max(), max_blocks = 0;
 			// perform misc checks
 
-			for (int signal_no = 0; signal_no < signals_data->Length(); signal_no++) {
+			for (size_t signal_no = 0; signal_no < signals_data->Length(); signal_no++) {
 				EdfModule::signal_info_t &sg_info = m_module.m_write_signals_info.at(signal_no);
 				if (signals_data->Get(signal_no)->IsArray())
 				{
@@ -381,7 +381,7 @@ class WriteSamplesWorker : Nan::AsyncWorker {
 				m_module.log(std::ostringstream() << "BLKWR sig#" << signal_no << " data index " << data_index << " data_index_end " << data_index_end);
 
 				for (; data_index < data_index_end; data_index++)
-					item_push_back(To<CastT>(signal_data_buf->Get(data_index)).FromJust());
+					this->item_push_back(To<CastT>(signal_data_buf->Get(data_index)).FromJust());
 
 
 				iterations++;
@@ -399,17 +399,18 @@ class WriteSamplesWorker : Nan::AsyncWorker {
 		edf_function_t m_function;
 		edf_buf_writer(EdfModule &module, edf_function_t edf_function) : parent_t(module), m_function(edf_function) {}
 		void edf_write_buf() {
-			this->m_edfResult = m_function(m_module.edfInfo().handle, this->m_block.data());
-			if (!this->m_edfResult) m_module.n_currentWriteSignalNo++;
+			this->m_edfResult = m_function(this->m_module.edfInfo().handle, this->m_block.data());
+			if (!this->m_edfResult) this->m_module.n_currentWriteSignalNo++;
 		}
 		void edf_write_block() {
 			std::stringstream ss;
-			ss << "writing " << this->m_block.size() / this->m_block_len << " blocks data size " << this->m_block.size() << " m_block_len " << this->m_block_len;
+			ss << "writing " << this->m_block.size() / this->m_block_len << " blocks data size " 
+                << this->m_block.size() << " m_block_len " << this->m_block_len;
 			//m_result = ss.str();
 
 			for (uint32_t block_no = 0; block_no < this->m_block.size() / this->m_block_len; block_no++)
 			{
-				this->m_edfResult = m_function(m_module.edfInfo().handle, this->m_block.data() + block_no * this->m_block_len);
+				this->m_edfResult = m_function(this->m_module.edfInfo().handle, this->m_block.data() + block_no * this->m_block_len);
 				if (this->m_edfResult < 0) break;
 			}
 		}
@@ -510,8 +511,9 @@ protected:
 	static bool basicChecks(EdfModule*, Nan::NAN_METHOD_ARGS_TYPE info, Local<v8::Array> &buf, Local<Function> &callback, std::string &error
 			, std::function<bool(Local<v8::Array>&)> additional_check);
 };
+
 template <typename HandlerType>
-static NAN_METHOD(WriteSamplesWorker::WriteBufSamples){
+NAN_METHOD(WriteSamplesWorker::WriteBufSamples){
 	Local<Function> _callback;
 	EdfModule* obj = node::ObjectWrap::Unwrap<EdfModule>(info.This());
 	std::string error = WRONG_ARGUMENTS_TXT;
@@ -522,9 +524,10 @@ static NAN_METHOD(WriteSamplesWorker::WriteBufSamples){
 		Local<v8::Array> buf = New<v8::Array>(0);
 
 		if (basicChecks(obj, info, buf, _callback, error, [&sg_info, &obj, &signal_no](Local<v8::Array>&data_buf) {
-			bool result = data_buf->Length() == sg_info.m_samplefrequency;
+			bool result = (int)data_buf->Length() == sg_info.m_samplefrequency;
 			if (!result)
-				obj->log(std::ostringstream() << "WR Wrong data length for signal #" << signal_no << " data length " << data_buf->Length() << " samplefrequency " << sg_info.m_samplefrequency);
+				obj->log(std::ostringstream() << "WR Wrong data length for signal #" << signal_no 
+                    << " data length " << data_buf->Length() << " samplefrequency " << sg_info.m_samplefrequency);
 
 			return result;
 		}))
@@ -542,7 +545,7 @@ static NAN_METHOD(WriteSamplesWorker::WriteBufSamples){
 	}
 }
 template <typename HandlerType>
-static NAN_METHOD(WriteSamplesWorker::WriteBlockSamples) {
+NAN_METHOD(WriteSamplesWorker::WriteBlockSamples) {
 	Local<Function> _callback;
 	EdfModule* obj = node::ObjectWrap::Unwrap<EdfModule>(info.This());
 	std::string error = WRONG_ARGUMENTS_TXT;
