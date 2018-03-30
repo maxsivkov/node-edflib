@@ -42,5 +42,4 @@ build/
 node_modules/
 test_signal_data/
 
-sample_data
 python
