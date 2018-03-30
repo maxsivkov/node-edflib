@@ -1,6 +1,5 @@
 Node.JS bindings for EdfLib
 ==============================
-[How-To Install and build project](http://gitlab.utasco.com/UCS/node-edflib/wikis/home)
 
 # Оглавление
 1. [Описание](#description)
