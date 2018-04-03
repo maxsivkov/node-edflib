@@ -93,7 +93,7 @@ public:
 	typedef std::lock_guard<edf_lock_t> edf_lock_guard_t;
 	
 	enum OpenMode {NoneMode, ReadMode, WriteMode};
-	void log(std::ostream &);
+	void log(const std::ostream &);
 	struct signal_info_t {
 		int m_samplefrequency;
 		double m_phys_min, m_phys_max;

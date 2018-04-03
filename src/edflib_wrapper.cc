@@ -124,12 +124,13 @@ NAN_MODULE_INIT(EdfModule::Init) {
 	
 }
 
-void EdfModule::log(std::ostream &oss)
+void EdfModule::log(const std::ostream &oss)
 {
+	return;
 	if (m_loggerCb.IsEmpty()) return;
 	std::string line = "";
 	try {
-		std::ostringstream& s = dynamic_cast<std::ostringstream&>(oss);
+		const std::ostringstream& s = dynamic_cast<const std::ostringstream&>(oss);
 		line = s.str();
 	}
 	catch (std::exception &ex) { line = ex.what(); }
