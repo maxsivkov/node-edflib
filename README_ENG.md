@@ -6,8 +6,8 @@ Node.JS bindings for EdfLib
 2. [Connect](#connect)
 3. [Methods for reading](#read-mode)
     * [OpenRead](#OpenRead)
-    * [ReadPhysicalSamples](# ReadPhysicalSamples)
-    * [ReadDigitalSamples](# ReadDigitalSamples)
+    * [ReadPhysicalSamples](#ReadPhysicalSamples)
+    * [ReadDigitalSamples](#ReadDigitalSamples)
     * [SeekSync](#SeekSync)
     * [TellSync](#TellSync)
     * [RewindSync](#RewindSync)
@@ -52,7 +52,7 @@ Using the library:
 <a name="read-mode"> </a>
 ## Methods for reading
   <a name="OpenRead"> </a>
-  * **OpenRead** (filepath, readAnnot, callback (err, result)) - open the file for reading,
+  * **OpenRead**(filepath, readAnnot, callback (err, result)) - open the file for reading,
 
     * ***filepath*** - local path to .edf - file
 
@@ -95,7 +95,7 @@ Using the library:
 <a name="write-mode"> </a>
 ## Methods for writing
   <a name="OpenWrite"> </a>
-  * **OpenWrite**(_ filepath_, _fileType_, _signalsNo_, callback (_err_, _result_)) - opening a file for writing,
+  * **OpenWrite**(_filepath_, _fileType_, _signalsNo_, callback (_err_, _result_)) - opening a file for writing,
 
     * ***filepath*** - the local path to the .edf file (if the file already exists, it will be overwritten)
 
@@ -109,13 +109,13 @@ Using the library:
     
     * ***callback*** - callback function, in which two parameters are passed err - in case of an error, result is the result of the operation.
   <a name="SetSampleFrequencySync"> </a>
-  * **SetSampleFrequencySync**(_ signalNo_, _samplerate_) - Sets the number of samples for the _signalNo_ signal. The function must be called ** BEFORE IMPROVING RECORDING **
+  * **SetSampleFrequencySync**(_signalNo_, _samplerate_) - Sets the number of samples for the _signalNo_ signal. The function must be called ** BEFORE IMPROVING RECORDING **
     
     * ***signalNo*** - The serial number of the signal (starting with 0)
     
     * ***samplerate*** - Number of samples per second
   <a name="SetPhysicalParametersSync"> </a>
-  * **SetPhysicalParametersSync**(_ signalNo_, _physicalMinimum_, _physicalMaximum_) - Set the physical minimum and maximum for the _signalNo_ signal. The function must be called ** BEFORE IMPROVING RECORDING **
+  * **SetPhysicalParametersSync**(_signalNo_, _physicalMinimum_, _physicalMaximum_) - Set the physical minimum and maximum for the _signalNo_ signal. The function must be called ** BEFORE IMPROVING RECORDING **
     
     * ***signalNo*** - The serial number of the signal (starting with 0)
     
@@ -123,7 +123,7 @@ Using the library:
     
     * ***physicalMaximum*** - Physical maximum
   <a name="SetDigitalParametersSync"> </a>
-  * **SetDigitalParametersSync**(_ signalNo_, _digitalMinimum_, _digitalMaximum_) - Set the logical minimum and maximum for signal _signalNo_. The function must be called ** BEFORE IMPROVING RECORDING **
+  * **SetDigitalParametersSync**(_signalNo_, _digitalMinimum_, _digitalMaximum_) - Set the logical minimum and maximum for signal _signalNo_. The function must be called ** BEFORE IMPROVING RECORDING **
     
     * ***signalNo*** - The serial number of the signal (starting with 0)
     
@@ -131,38 +131,38 @@ Using the library:
     
     * ***digitalMaximum*** - Logical maximum
   <a name="SetLabelSync"> </a>
-  * **SetLabelSync**(_ signalNo_, _label_) - Set the text description for the _signalNo_ signal. The function must be called ** BEFORE IMPROVING RECORDING **
+  * **SetLabelSync**(_signalNo_, _label_) - Set the text description for the _signalNo_ signal. The function must be called ** BEFORE IMPROVING RECORDING **
     
     * ***signalNo*** - The serial number of the signal (starting with 0)
     
     * ***label*** - Text string with the name of the signal
   <a name="SetPrefilterSync"> </a>
-  * **SetPrefilterSync**(_ signalNo_, _prefilter_) - Set prefilter (for example "HP: 0.1Hz", "LP: 75Hz N: 50Hz", etc.) for the _signalNo_ signal. The function must be called ** BEFORE IMPROVING RECORDING **
+  * **SetPrefilterSync**(_signalNo_, _prefilter_) - Set prefilter (for example "HP: 0.1Hz", "LP: 75Hz N: 50Hz", etc.) for the _signalNo_ signal. The function must be called ** BEFORE IMPROVING RECORDING **
     
     * ***signalNo*** - The serial number of the signal (starting with 0)
     
     * ***prefilter*** - Filter name
   <a name="SetTransducerSync"> </a>
-  * **SetTransducerSync** (_ signalNo_, _transducer_) - Set the name of the sensor (for example "AgAgCl cup electrodes,", etc.) for the _signalNo_ signal. The function must be called ** BEFORE IMPROVING RECORDING **
+  * **SetTransducerSync**(_signalNo_, _transducer_) - Set the name of the sensor (for example "AgAgCl cup electrodes,", etc.) for the _signalNo_ signal. The function must be called ** BEFORE IMPROVING RECORDING **
     
     * ***signalNo*** - The serial number of the signal (starting with 0)
     
     * ***transducer*** - Sensor name
   <a name="SetPhysicalDimensionSync"> </a>
-  * **SetPhysicalDimensionSync**(_ signalNo_, _dimensions_) - Set the unit of measurement (for example uV "," BPM "," mA "," Degr. ", Etc.) for the _signalNo_ signal. The function must be called ** BEFORE RECORDING **
+  * **SetPhysicalDimensionSync**(_signalNo_, _dimensions_) - Set the unit of measurement (for example uV "," BPM "," mA "," Degr. ", Etc.) for the _signalNo_ signal. The function must be called ** BEFORE RECORDING **
     
     * ***signalNo*** - The serial number of the signal (starting with 0)
     
     * ***dimensions*** - Units of measurement
   <a name="WritePhysicalSamples"> </a>
-  * **WritePhysicalSamples**(_ samplesArray_, callback (_err_, _result_)) - Write an array of _samplesArray_ to the file. The sequence number of the _WritePhysicalSamples_ function call corresponds to the signal number.
+  * **WritePhysicalSamples**(_samplesArray_, callback (_err_, _result_)) - Write an array of _samplesArray_ to the file. The sequence number of the _WritePhysicalSamples_ function call corresponds to the signal number.
             Those. let's say the number of signals = 2, the first call corresponds to the signal No. 0, the second call to the signal No. 1, the third to the signal No. 0, the fourth to the signal No. 1, etc.
     
     * ***samplesArray*** - An array with signal values, its length should be equal to _samplerate_
     
     * ***callback*** - callback function, in which two parameters are passed err - in case of an error, result is the result of the operation.
   <a name="BlockWritePhysicalSamples"> </a>
-  * **BlockWritePhysicalSamples**(_ arrayOfSamplesArray_, callback (_err_, _result_)) - Write signals to the file in block mode.
+  * **BlockWritePhysicalSamples**(_arrayOfSamplesArray_, callback (_err_, _result_)) - Write signals to the file in block mode.
     
     * ***arrayOfSamplesArray*** - An array of arrays with signal values, the index of the subarray in the array _arrayOfSamplesArray_ corresponds to the signal number. The number of elements in each subarray _arrayOfSamplesArray_ must be a multiple of _samplerate_
             Those. suppose you want to record the data of two signals (with _samplerate_ 100 and 150) in 3 seconds. In this case, the number of elements in the first array will be 300, in the second 450.
@@ -170,40 +170,40 @@ Using the library:
     * ***callback*** - callback function, in which two parameters are passed err - in case of an error, result is the result of the operation.
 
 <a name="WriteDigitalShortSamples"> </a>
-  * **WriteDigitalShortSamples**(_ samplesArray_, callback (_err_, _result_)) Write an array of _samplesArray_ to the file. The sequence number of the _WriteDigitalShortSamples_ function call corresponds to the signal number. The value of each element of the _samplesArray_ array must be an integer and must be between -32768 and 32767.
+  * **WriteDigitalShortSamples**(_samplesArray_, callback (_err_, _result_)) Write an array of _samplesArray_ to the file. The sequence number of the _WriteDigitalShortSamples_ function call corresponds to the signal number. The value of each element of the _samplesArray_ array must be an integer and must be between -32768 and 32767.
         
     * ***samplesArray*** - An array with signal values, its length should be equal to _samplerate_
     
     * ***callback*** - callback function, in which two parameters are passed err - in case of an error, result is the result of the operation.
   <a name="WriteDigitalSamples"> </a>
-  * **WriteDigitalSamples**(_ samplesArray_, callback (_err_, _result_)) Write an array of _samplesArray_ to the file. The sequence number of the _WriteDigitalShortSamples_ function call corresponds to the signal number. The value of each element of the array _samplesArray_ must be an integer
+  * **WriteDigitalSamples**(_samplesArray_, callback (_err_, _result_)) Write an array of _samplesArray_ to the file. The sequence number of the _WriteDigitalShortSamples_ function call corresponds to the signal number. The value of each element of the array _samplesArray_ must be an integer
         
     * ***samplesArray*** - An array with signal values, its length should be equal to _samplerate_
     
     * ***callback*** - callback function, in which two parameters are passed err - in case of an error, result is the result of the operation.
   <a name="BlockWriteDigitalShortSamples"> </a>
-  * **BlockWriteDigitalShortSamples**(_ arrayOfSamplesArray_, callback (_err_, _result_)) - Write signals to the file in block mode.
+  * **BlockWriteDigitalShortSamples**(_arrayOfSamplesArray_, callback (_err_, _result_)) - Write signals to the file in block mode.
     
     * ***arrayOfSamplesArray*** - An array of arrays with signal values, the index of the subarray in the array _arrayOfSamplesArray_ corresponds to the signal number. The number of elements in each _arrayOfSamplesArray_ subarray must be a multiple of _samplerate_, the value of each subarray element _arrayOfSamplesArray_ must be an integer and be within -32768 to 32767.
             Those. suppose you want to record the data of two signals (with _samplerate_ 100 and 150) in 3 seconds. In this case, the number of elements in the first array will be 300, in the second 450.
     
     * ***callback*** - callback function, in which two parameters are passed err - in case of an error, result - the result of the operation. <a name="write-Close"> </a>
   <a name="BlockWriteDigitalSamples"> </a>
-  * **BlockWriteDigitalSamples**(_ arrayOfSamplesArray_, callback (_err_, _result_)) - Write signals to the file in block mode.
+  * **BlockWriteDigitalSamples**(_arrayOfSamplesArray_, callback (_err_, _result_)) - Write signals to the file in block mode.
     
     * ***arrayOfSamplesArray*** - An array of arrays with signal values, the index of the subarray in the array _arrayOfSamplesArray_ corresponds to the signal number. The number of elements in each subarray _arrayOfSamplesArray_ must be a multiple of _samplerate_, the value of each subarray element _arrayOfSamplesArray_ must be an integer
             Those. suppose you want to record the data of two signals (with _samplerate_ 100 and 150) in 3 seconds. In this case, the number of elements in the first array will be 300, in the second 450.
     
     * ***callback*** - callback function, in which two parameters are passed err - in case of an error, result - the result of the operation. <a name="write-Close"> </a>
   <a name="BlockWriteDigital3ByteSamples"> </a>
-  * **BlockWriteDigital3ByteSamples**(_ arrayOfSamplesArray_, callback (_err_, _result_)) - Write signals to the file in block mode.
+  * **BlockWriteDigital3ByteSamples**(_arrayOfSamplesArray_, callback (_err_, _result_)) - Write signals to the file in block mode.
     
     * ***arrayOfSamplesArray*** - An array of arrays with signal values, the index of the subarray in the array _arrayOfSamplesArray_ corresponds to the signal number. The number of elements in each subarray _arrayOfSamplesArray_ must be a multiple of _samplerate_, the value of each subarray element _arrayOfSamplesArray_ must be an integer, the function writes the first 24 bits of the value of each signal.
             Those. suppose you want to record the data of two signals (with _samplerate_ 100 and 150) in 3 seconds. In this case, the number of elements in the first array will be 300, in the second 450.
     
     * ***callback*** - callback function, in which two parameters are passed err - in case of an error, result - the result of the operation. <a name="write-Close"> </a>
   <a name="WriteAnnotationSync"> </a>
-  * **WriteAnnotationSync**(_ onset_, _duration_, _description_) Write annotations to a file
+  * **WriteAnnotationSync**(_onset_, _duration_, _description_) Write annotations to a file
         
     * ***onset*** - Relative event time (relative to starttime and startdate file), measured in 10,000 seconds (0.0001 seconds)
     
@@ -211,7 +211,7 @@ Using the library:
     
     * ***description*** - Event description, encoded in UTF8
   <a name="WriteAnnotationLatin1Sync"> </a>
-  * **WriteAnnotationLatin1Sync**(_ onset_, _duration_, _description_) Write annotations to a file
+  * **WriteAnnotationLatin1Sync**(_onset_, _duration_, _description_) Write annotations to a file
         
     * ***onset*** - Relative event time (relative to starttime and startdate file), measured in 10,000 seconds (0.0001 seconds)
     
@@ -219,7 +219,7 @@ Using the library:
     
     * ***description*** - Event description, in Latin1
 <a name="SetNumberOfAnnotationSignals"> </a>
-  * **SetNumberOfAnnotationSignals** (number) Set the number of signals for annotations
+  * **SetNumberOfAnnotationSignals**(number) Set the number of signals for annotations
         
     * ***number*** - Number of signals for annotations. The total number of annotations in a file can not exceed the product of the number of seconds by the number of signals for annotations.
     Those. to record N annotations, you need to set the number of signals for annotations in (N / number_of_seconds + 1)
