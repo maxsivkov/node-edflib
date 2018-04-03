@@ -126,6 +126,7 @@ NAN_MODULE_INIT(EdfModule::Init) {
 
 void EdfModule::log(const std::ostream &oss)
 {
+	return;
 	if (m_loggerCb.IsEmpty()) return;
 	std::string line = "";
 	try {
